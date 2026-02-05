@@ -3,32 +3,28 @@
 import { useEffect, useState } from "react";
 
 export default function Home() {
-  const [timeLeft, setTimeLeft] = useState<{
-    days: number;
-    hours: number;
-    minutes: number;
-    seconds: number;
-  } | null>(null);
+  // 🔥 FIXED LAUNCH DATE (March 5, 2026 – change year if needed)
+  const launchDate = new Date("2026-03-05T00:00:00");
+
+  const [time, setTime] = useState({
+    days: 0,
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
+  });
 
   useEffect(() => {
-    const launchDate = new Date();
-    launchDate.setDate(launchDate.getDate() + 30);
-
     const timer = setInterval(() => {
       const now = new Date().getTime();
-      const distance = launchDate.getTime() - now;
+      const diff = launchDate.getTime() - now;
 
-      if (distance < 0) {
-        clearInterval(timer);
-        setTimeLeft(null);
-        return;
-      }
+      if (diff <= 0) return;
 
-      setTimeLeft({
-        days: Math.floor(distance / (1000 * 60 * 60 * 24)),
-        hours: Math.floor((distance / (1000 * 60 * 60)) % 24),
-        minutes: Math.floor((distance / (1000 * 60)) % 60),
-        seconds: Math.floor((distance / 1000) % 60),
+      setTime({
+        days: Math.floor(diff / (1000 * 60 * 60 * 24)),
+        hours: Math.floor((diff / (1000 * 60 * 60)) % 24),
+        minutes: Math.floor((diff / (1000 * 60)) % 60),
+        seconds: Math.floor((diff / 1000) % 60),
       });
     }, 1000);
 
@@ -36,44 +32,170 @@ export default function Home() {
   }, []);
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        background: "radial-gradient(circle, #1e3a8a, #000000)",
-        color: "#ffffff",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        fontFamily: "Arial, sans-serif",
-        textAlign: "center",
-        padding: "20px",
-      }}
-    >
-      <h1 style={{ fontSize: "48px", marginBottom: "10px" }}>Basopatti.in</h1>
-      <p style={{ fontSize: "20px", marginBottom: "30px" }}>Website is coming soon!</p>
-      {timeLeft ? (
-        <div style={{ display: "flex", gap: "20px", justifyContent: "center" }}>
-          {Object.entries(timeLeft).map(([label, value]) => (
-            <div
-              key={label}
-              style={{
-                background: "#ffffff22",
-                padding: "15px 20px",
-                borderRadius: "10px",
-                minWidth: "80px",
-              }}
-            >
-              <div style={{ fontSize: "24px", fontWeight: "bold" }}>{value}</div>
-              <div style={{ fontSize: "14px", textTransform: "uppercase", marginTop: "5px" }}>
-                {label}
-              </div>
-            </div>
-          ))}
+    <div className="page">
+      <div className="bg-blur" />
+
+      <div className="card">
+        <h1>
+          Basopatti<span>.in</span>
+        </h1>
+
+        <p className="tagline">Official Digital City Portal</p>
+
+        <div className="badge">🚀 Website Launching Soon</div>
+
+        <p className="features">
+          Jobs • News • Events • Citizen Services
+        </p>
+
+        <div className="countdown">
+          <Box label="Days" value={time.days} />
+          <Box label="Hours" value={time.hours} />
+          <Box label="Minutes" value={time.minutes} />
+          <Box label="Seconds" value={time.seconds} />
         </div>
-      ) : (
-        <p>Launch time reached!</p>
-      )}
+
+        <p className="date">
+          Launch Date: <strong>5 March 2026</strong>
+        </p>
+
+        <footer>© 2026 Basopatti City Initiative</footer>
+      </div>
+
+      {/* 🔽 STYLES */}
+      <style jsx>{`
+        .page {
+          min-height: 100vh;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: radial-gradient(
+              circle at top,
+              #2563eb,
+              transparent 60%
+            ),
+            linear-gradient(160deg, #020617, #020617);
+          font-family: Inter, Arial, sans-serif;
+          color: white;
+          position: relative;
+          overflow: hidden;
+        }
+
+        .bg-blur {
+          position: absolute;
+          width: 500px;
+          height: 500px;
+          background: #3b82f6;
+          filter: blur(140px);
+          opacity: 0.3;
+          top: -150px;
+          right: -150px;
+        }
+
+        .card {
+          background: rgba(255, 255, 255, 0.08);
+          backdrop-filter: blur(16px);
+          border-radius: 20px;
+          padding: 50px 40px;
+          max-width: 720px;
+          width: 100%;
+          text-align: center;
+          box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+          z-index: 1;
+        }
+
+        h1 {
+          font-size: 52px;
+          font-weight: 800;
+          margin: 0;
+          letter-spacing: 1px;
+        }
+
+        h1 span {
+          color: #60a5fa;
+        }
+
+        .tagline {
+          margin-top: 8px;
+          font-size: 18px;
+          color: #c7d2fe;
+        }
+
+        .badge {
+          margin: 28px auto 12px;
+          display: inline-block;
+          padding: 8px 16px;
+          border-radius: 50px;
+          background: linear-gradient(90deg, #facc15, #fb923c);
+          color: #000;
+          font-weight: 600;
+          font-size: 14px;
+        }
+
+        .features {
+          margin-top: 10px;
+          color: #e5e7eb;
+          font-size: 15px;
+        }
+
+        .countdown {
+          margin-top: 36px;
+          display: flex;
+          justify-content: center;
+          gap: 18px;
+          flex-wrap: wrap;
+        }
+
+        .box {
+          width: 110px;
+          padding: 18px 10px;
+          border-radius: 14px;
+          background: linear-gradient(145deg, #020617, #111827);
+          border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .value {
+          font-size: 32px;
+          font-weight: 800;
+        }
+
+        .label {
+          margin-top: 6px;
+          font-size: 12px;
+          letter-spacing: 1px;
+          color: #94a3b8;
+        }
+
+        .date {
+          margin-top: 28px;
+          font-size: 14px;
+          color: #cbd5f5;
+        }
+
+        footer {
+          margin-top: 32px;
+          font-size: 12px;
+          color: #94a3b8;
+        }
+
+        @media (max-width: 600px) {
+          h1 {
+            font-size: 38px;
+          }
+          .card {
+            padding: 40px 20px;
+          }
+        }
+      `}</style>
+    </div>
+  );
+}
+
+function Box({ label, value }: { label: string; value: number }) {
+  return (
+    <div className="box">
+      <div className="value">{value}</div>
+      <div className="label">{label.toUpperCase()}</div>
     </div>
   );
 }
