@@ -3,18 +3,32 @@
 import { useEffect, useState } from "react";
 
 export default function Home() {
-  const launchDate = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
-  const [time, setTime] = useState<any>({});
+  const [timeLeft, setTimeLeft] = useState<{
+    days: number;
+    hours: number;
+    minutes: number;
+    seconds: number;
+  } | null>(null);
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      const diff = +launchDate - +new Date();
+    const launchDate = new Date();
+    launchDate.setDate(launchDate.getDate() + 30);
 
-      setTime({
-        days: Math.floor(diff / (1000 * 60 * 60 * 24)),
-        hours: Math.floor((diff / (1000 * 60 * 60)) % 24),
-        minutes: Math.floor((diff / 1000 / 60) % 60),
-        seconds: Math.floor((diff / 1000) % 60),
+    const timer = setInterval(() => {
+      const now = new Date().getTime();
+      const distance = launchDate.getTime() - now;
+
+      if (distance < 0) {
+        clearInterval(timer);
+        setTimeLeft(null);
+        return;
+      }
+
+      setTimeLeft({
+        days: Math.floor(distance / (1000 * 60 * 60 * 24)),
+        hours: Math.floor((distance / (1000 * 60 * 60)) % 24),
+        minutes: Math.floor((distance / (1000 * 60)) % 60),
+        seconds: Math.floor((distance / 1000) % 60),
       });
     }, 1000);
 
@@ -25,131 +39,41 @@ export default function Home() {
     <div
       style={{
         minHeight: "100vh",
-        background:
-          "radial-gradient(circle at top, #1e3a8a, #020617)",
+        background: "radial-gradient(circle, #1e3a8a, #000000)",
         color: "#ffffff",
         display: "flex",
+        flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        fontFamily: "Inter, Arial, sans-serif",
+        fontFamily: "Arial, sans-serif",
+        textAlign: "center",
         padding: "20px",
       }}
     >
-      <div
-        style={{
-          maxWidth: "700px",
-          width: "100%",
-          textAlign: "center",
-          background: "rgba(255,255,255,0.05)",
-          padding: "50px 30px",
-          borderRadius: "16px",
-          boxShadow: "0 20px 40px rgba(0,0,0,0.4)",
-        }}
-      >
-        {/* Title */}
-        <h1
-          style={{
-            fontSize: "48px",
-            fontWeight: "800",
-            marginBottom: "8px",
-            letterSpacing: "1px",
-          }}
-        >
-          Basopatti<span style={{ color: "#60a5fa" }}>.in</span>
-        </h1>
-
-        {/* Subtitle */}
-        <p
-          style={{
-            fontSize: "18px",
-            color: "#cbd5f5",
-            marginBottom: "30px",
-          }}
-        >
-          Official Digital City Portal
-        </p>
-
-        {/* Coming Soon */}
-        <h2
-          style={{
-            fontSize: "22px",
-            fontWeight: "600",
-            color: "#facc15",
-            marginBottom: "12px",
-          }}
-        >
-          🚀 Website Coming Soon
-        </h2>
-
-        <p
-          style={{
-            fontSize: "15px",
-            color: "#e5e7eb",
-            marginBottom: "35px",
-          }}
-        >
-          Jobs • News • Events • Citizen Services
-        </p>
-
-        {/* Countdown */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            gap: "16px",
-            flexWrap: "wrap",
-          }}
-        >
-          <TimeBox label="Days" value={time.days} />
-          <TimeBox label="Hours" value={time.hours} />
-          <TimeBox label="Minutes" value={time.minutes} />
-          <TimeBox label="Seconds" value={time.seconds} />
+      <h1 style={{ fontSize: "48px", marginBottom: "10px" }}>Basopatti.in</h1>
+      <p style={{ fontSize: "20px", marginBottom: "30px" }}>Website is coming soon!</p>
+      {timeLeft ? (
+        <div style={{ display: "flex", gap: "20px", justifyContent: "center" }}>
+          {Object.entries(timeLeft).map(([label, value]) => (
+            <div
+              key={label}
+              style={{
+                background: "#ffffff22",
+                padding: "15px 20px",
+                borderRadius: "10px",
+                minWidth: "80px",
+              }}
+            >
+              <div style={{ fontSize: "24px", fontWeight: "bold" }}>{value}</div>
+              <div style={{ fontSize: "14px", textTransform: "uppercase", marginTop: "5px" }}>
+                {label}
+              </div>
+            </div>
+          ))}
         </div>
-
-        {/* Footer */}
-        <p
-          style={{
-            marginTop: "40px",
-            fontSize: "12px",
-            color: "#94a3b8",
-          }}
-        >
-          © {new Date().getFullYear()} Basopatti City Initiative
-        </p>
-      </div>
-    </div>
-  );
-}
-
-function TimeBox({ label, value }: any) {
-  return (
-    <div
-      style={{
-        minWidth: "100px",
-        padding: "16px",
-        background: "linear-gradient(145deg, #1e293b, #020617)",
-        borderRadius: "12px",
-        boxShadow: "inset 0 0 0 1px rgba(255,255,255,0.08)",
-      }}
-    >
-      <div
-        style={{
-          fontSize: "28px",
-          fontWeight: "700",
-        }}
-      >
-        {value ?? "--"}
-      </div>
-      <div
-        style={{
-          fontSize: "12px",
-          letterSpacing: "1px",
-          color: "#c7d2fe",
-          marginTop: "4px",
-        }}
-      >
-        {label.toUpperCase()}
-      </div>
+      ) : (
+        <p>Launch time reached!</p>
+      )}
     </div>
   );
 }
