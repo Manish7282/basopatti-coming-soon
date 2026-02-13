@@ -5,6 +5,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
+    <body>
+  <Navbar />
+  {children}
+</body>
     <html>
       <body style={{ margin: 0, fontFamily: "Arial, sans-serif" }}>
         {children}
