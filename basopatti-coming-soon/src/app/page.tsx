@@ -258,7 +258,9 @@ function Box({ label, value }: { label: string; value: number }) {
           Launch Date: <strong>5 March 2026</strong>
         </p>
 
-        <footer>© 2026 Basopatti City Initiative</footer>
+        <footer>© 2026 Basopatti City Initiative
+          Made andd Design By Manish
+        </footer>
       </div>
 
       {/* 🔽 STYLES */}
