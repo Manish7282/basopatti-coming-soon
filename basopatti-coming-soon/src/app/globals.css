@@ -24,3 +24,10 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+.nav-link {
+  @apply text-gray-700 hover:text-blue-600 transition duration-300 font-medium;
+}
+
+.mobile-link {
+  @apply block text-gray-700 hover:text-blue-600;
+}
